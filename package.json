@@ -4,7 +4,7 @@
   "description": "",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "ts-node data-layer/index.ts"
+    "serve": "ts-node backend/index.ts"
   },
   "keywords": [],
   "author": "",
