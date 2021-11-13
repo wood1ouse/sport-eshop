@@ -1,18 +1,15 @@
-import express from "express";
 import { Router } from "express";
-import ShopController from './ShopController';
+import ShopFacade from './ShopFacade';
 
 
 const router = new (Router as any)();
 
-router.get('/', ShopController.combineData)
+router.get('/', ShopFacade.combineData)
 
-router.get("/search", (req: express.Request, res: express.Response) => {
-    res.status(200).json(req.query)
-}); 
+router.get("/search", ShopFacade.filterBy); 
 
-router.get("/price-list", ShopController.getPriceList);
+router.get("/price-list", ShopFacade.getPriceList);
 
-router.get("/details/:id", ShopController.getDetailed);
+router.get("/details/:ProductId", ShopFacade.getDetailed);
 
 export default router;
