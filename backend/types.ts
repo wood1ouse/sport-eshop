@@ -24,4 +24,5 @@ export type Product = {
 export interface Query {
 	selectBody: string,
 	innerJoinBody: string
+	orderBody: string
 }

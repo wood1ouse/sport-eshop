@@ -4,9 +4,9 @@ export class ProductSpecification {
 	constructor(private products: Array<Product>, private filter: Filter) {}
 
 	private isSatisfiedBy(product: Product): boolean {
-		for (const filterprop of Object.values(this.filter)) {
-			for (const productprop of Object.values(product)) {
-				if (filterprop == productprop) {
+		for (const [filterKey, filterValue] of Object.entries(this.filter)) {
+			for (const [productKey, productValue] of Object.entries(product)) {
+				if (filterKey === productKey && filterValue == productValue) {
 					return true;
 				}
 			}

@@ -18,6 +18,7 @@ export default class ShopController {
 	};
 
 	getDetailed = async (req: Request, res: Response) => {
+		this.db.connect("DetailedProvider");
 		const data: Array<Product> = await this.getAllRows("DetailedProvider");
 
 		const productById = new ProductSpecification(data, req.params);
@@ -31,21 +32,32 @@ export default class ShopController {
 			);
 	};
 
-	combineData = async (_: Request, res: Response) => {
-		const dbData: Array<Product> = await this.getAllRows("SportShopDB");
-		const firstProvider: Array<Product> = await this.getAllRows(
+	combineData = async (req: Request, res: Response) => {
+		const dbData: Array<Product> = await this.db.getAllCombined("SportShopDB");
+
+		const firstProvider: Array<Product> = await this.db.getAllCombined(
 			"DetailedProvider",
 		);
-		const secondProvider: Array<Product> = await this.getAllRows(
+
+		const secondProvider: Array<Product> = await this.db.getAllCombined(
 			"FilteredProvider",
 		);
 
-		res.status(200).json([...dbData, ...firstProvider, ...secondProvider]);
+		const combinedData = [...dbData, ...firstProvider, ...secondProvider];
+
+		if (Object.keys(req.query).length === 0) {
+			res.status(200).json(combinedData);
+		} else {
+			const filteredData = new ProductSpecification(combinedData, req.query);
+
+			res.status(200).json(filteredData.getSatisfiedBy());
+		}
 	};
 
 	filterBy = async (req: Request, res: Response) => {
 		this.db.connect("FilteredProvider");
-		const data = await this.db.filterBy();
+
+		const data = await this.db.getAllCombined();
 
 		const filteredByParams = new ProductSpecification(data, req.query);
 

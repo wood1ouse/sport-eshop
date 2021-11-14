@@ -7,6 +7,7 @@ export class QueryBuilder {
 		this._query = {
 			selectBody: "",
 			innerJoinBody: "",
+			orderBody: "",
 		};
 	}
 
@@ -17,6 +18,11 @@ export class QueryBuilder {
 
 	public innerJoin(table: string, left: string, right: string): QueryBuilder {
 		this._query.innerJoinBody += `INNER JOIN ${table} ON ${left} = ${right}\n`;
+		return this;
+	}
+
+	public orderBy(field: string): QueryBuilder {
+		this._query.orderBody += `ORDER BY ${field}`;
 		return this;
 	}
 

@@ -83,7 +83,11 @@ export default class SingletonDB {
 		});
 	}
 
-	async filterBy(): Promise<Array<Product>> {
+	async getAllCombined(
+		database: string = "FilteredProvider",
+	): Promise<Array<Product>> {
+		this.connect(database);
+
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
 				new QueryBuilder()
@@ -91,7 +95,6 @@ export default class SingletonDB {
 						[
 							"Product.ProductId",
 							"Product.ProductName",
-							"Product.SubcategoryId",
 							"Product.Brand",
 							"Product.Price",
 							"Product.Material",
@@ -102,18 +105,20 @@ export default class SingletonDB {
 							"Subcategory.SubcategoryName",
 							"Category.CategoryName",
 						],
-						"FilteredProvider.Product",
+						`${database}.Product`,
 					)
 					.innerJoin(
-						"FilteredProvider.Subcategory",
+						`${database}.Subcategory`,
 						"Product.SubcategoryId",
 						"Subcategory.SubcategoryId",
 					)
 					.innerJoin(
-						"FilteredProvider.Category",
+						`${database}.Category`,
 						"Product.SubcategoryId",
 						"Category.SubcategoryId",
 					)
+					.orderBy("ProductId")
+
 					.ExecuteQuery(),
 
 				(error, results) => {
