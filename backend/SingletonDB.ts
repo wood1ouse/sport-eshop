@@ -83,28 +83,6 @@ export default class SingletonDB {
 		});
 	}
 
-	async getDetailed(id: any): Promise<Array<Product>> {
-		return new Promise((resolve, reject) => {
-			this.connection?.query(
-				`SELECT ProductId, ProductName, SubcategoryId, Brand, Price, Material, Color, Size, Discount, Amount FROM Product WHERE ProductId = ${id}`,
-				(error, results) => {
-					if (error) {
-						reject(error);
-					} else resolve(results);
-				},
-			);
-		});
-	}
-
-	/*
-SELECT Product.ProductId, Product.ProductName, Product.SubcategoryId, Product.Brand, Product.Price, Product.Material, Product.Color, Product.Size, Product.Discount, Product.Amount, Subcategory.SubcategoryName, Category.CategoryName
-			FROM FilteredProvider.Product
-			Inner Join FilteredProvider.Subcategory on Product.SubcategoryId = Subcategory.SubcategoryId
-			Inner Join FilteredProvider.Category on Product.SubcategoryId = Category.SubcategoryId`
-
-
-*/
-
 	async filterBy(): Promise<Array<Product>> {
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
@@ -148,5 +126,3 @@ SELECT Product.ProductId, Product.ProductName, Product.SubcategoryId, Product.Br
 		});
 	}
 }
-
-// where SubcategoryName = '${filter.SubcategoryName}' or CategoryName = '${filter.CategoryName}' or Brand = '${filter.Brand}'`,

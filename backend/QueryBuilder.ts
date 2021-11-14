@@ -10,10 +10,6 @@ export class QueryBuilder {
 		};
 	}
 
-	public ExecuteQuery(): string {
-		return Object.values(this._query).join("\n")
-	}
-
 	public select(queries: Array<String>, table: string): QueryBuilder {
 		this._query.selectBody += `SELECT ${queries.join(", ")} FROM ${table}`;
 		return this;
@@ -22,5 +18,9 @@ export class QueryBuilder {
 	public innerJoin(table: string, left: string, right: string): QueryBuilder {
 		this._query.innerJoinBody += `INNER JOIN ${table} ON ${left} = ${right}\n`;
 		return this;
+	}
+
+	public ExecuteQuery(): string {
+		return Object.values(this._query).join("\n");
 	}
 }
