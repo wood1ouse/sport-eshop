@@ -1,8 +1,8 @@
 import express from "express";
-import SingletonDB from "./SingletonDB";
+
 import ShopFacade from "./ShopFacade";
 
-const PORT: number = 3000;
+const PORT = 3000;
 
 const app = express();
 

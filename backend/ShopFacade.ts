@@ -11,13 +11,7 @@ class ShopFacade {
 
 	initApp(): Router {
 		this.router.get("/", this.shopController.combineData);
-
-		this.router.get("/search", this.shopController.filterBy);
-
-		this.router.get("/price-list", this.shopController.getPriceList);
-
-		this.router.get("/details/:ProductId", this.shopController.getDetailed);
-
+		
 		return this.router
 	}
 }

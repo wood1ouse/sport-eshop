@@ -1,33 +1,36 @@
-import mysql from "mysql";
-import DatabaseUtils from "../Utils";
-import { QueryBuilder } from "./providers/utils/QueryBuilder";
-import { Product } from "./providers/utils/types";
+import mysql from 'mysql';
+import DatabaseUtils from '../../../Utils';
+import { QueryBuilder } from '../utils/QueryBuilder';
+import { Product } from '../utils/types';
 
-export default class SingletonDB {
-	static instance: SingletonDB;
+export default class FilteredProviderSingleton {
+    static instance: FilteredProviderSingleton;
+    static dbName: string = "FilteredProvider"
 	private user: string = DatabaseUtils.user;
 	private password: string = DatabaseUtils.password;
 
-	connection: mysql.Connection | undefined;
+    connection: mysql.Connection | undefined;
 
-	private constructor() {}
+    private constructor() {}
 
-	public static getInstance(): SingletonDB {
-		if (!SingletonDB.instance) {
-			SingletonDB.instance = new SingletonDB();
+    public static async getInstance(): Promise<FilteredProviderSingleton> {
+		if (!FilteredProviderSingleton.instance) {
+			FilteredProviderSingleton.instance = new FilteredProviderSingleton();
 		}
 
-		return SingletonDB.instance;
+        await FilteredProviderSingleton.instance.connect()
+        
+		return FilteredProviderSingleton.instance;
 	}
 
-	async connect(database: string): Promise<void> {
+	public async connect(): Promise<void> {
 		return new Promise((resolve, reject) => {
 			try {
 				this.connection = mysql.createConnection({
 					host: "localhost",
 					user: this.user,
 					password: this.password,
-					database,
+					database: FilteredProviderSingleton.dbName,
 				});
 
 				this.connection.connect();
@@ -39,10 +42,7 @@ export default class SingletonDB {
 		});
 	}
 
-	async getAllCombined(
-		database: string = "FilteredProvider",
-	): Promise<Array<Product>> {
-		this.connect(database);
+    async getAllCombined(): Promise<Array<Product>> {
 
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
@@ -61,15 +61,15 @@ export default class SingletonDB {
 							"Subcategory.SubcategoryName",
 							"Category.CategoryName",
 						],
-						`${database}.Product`,
+						`${FilteredProviderSingleton.dbName}.Product`,
 					)
 					.innerJoin(
-						`${database}.Subcategory`,
+						`${FilteredProviderSingleton.dbName}.Subcategory`,
 						"Product.SubcategoryId",
 						"Subcategory.SubcategoryId",
 					)
 					.innerJoin(
-						`${database}.Category`,
+						`${FilteredProviderSingleton.dbName}.Category`,
 						"Product.SubcategoryId",
 						"Category.SubcategoryId",
 					)
@@ -86,4 +86,6 @@ export default class SingletonDB {
 			);
 		});
 	}
+
+    
 }

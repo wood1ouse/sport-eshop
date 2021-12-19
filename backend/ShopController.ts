@@ -1,7 +1,9 @@
-import { Product } from "./types";
-import { ProductSpecification } from "./ProductSpecification";
 import { Request, Response } from "express";
+
+import { Product } from "./providers/utils/types";
+import { ProductSpecification } from "./providers/utils/ProductSpecification";
 import SingletonDB from "./SingletonDB";
+import axios from 'axios';
 
 export default class ShopController {
 	private db: SingletonDB;
@@ -9,39 +11,12 @@ export default class ShopController {
 	constructor() {
 		this.db = SingletonDB.getInstance();
 	}
-
-	getPriceList = async (_: Request, res: Response) => {
-		this.db.connect("DetailedProvider");
-		const data: Array<Product> = await this.db.getPriceList("Product");
-
-		res.status(200).json(data);
-	};
-
-	getDetailed = async (req: Request, res: Response) => {
-		this.db.connect("DetailedProvider");
-		const data: Array<Product> = await this.getAllRows("DetailedProvider");
-
-		const productById = new ProductSpecification(data, req.params);
-
-		res
-			.status(200)
-			.json(
-				productById.getSatisfiedBy().length === 0
-					? { message: "Can't find data!" }
-					: productById.getSatisfiedBy(),
-			);
-	};
-
 	combineData = async (req: Request, res: Response) => {
 		const dbData: Array<Product> = await this.db.getAllCombined("SportShopDB");
 
-		const firstProvider: Array<Product> = await this.db.getAllCombined(
-			"DetailedProvider",
-		);
+		const firstProvider: Array<Product> = (await axios.get('http://localhost:3001/getproducts')).data
 
-		const secondProvider: Array<Product> = await this.db.getAllCombined(
-			"FilteredProvider",
-		);
+		const secondProvider: Array<Product> = (await axios.get('http://localhost:3002/getproducts')).data
 
 		const combinedData = [...dbData, ...firstProvider, ...secondProvider];
 
@@ -52,23 +27,5 @@ export default class ShopController {
 
 			res.status(200).json(filteredData.getSatisfiedBy());
 		}
-	};
-
-	filterBy = async (req: Request, res: Response) => {
-		this.db.connect("FilteredProvider");
-
-		const data = await this.db.getAllCombined();
-
-		const filteredByParams = new ProductSpecification(data, req.query);
-
-		res.status(200).json(filteredByParams.getSatisfiedBy());
-	};
-
-	getAllRows = async (database: string) => {
-		this.db.connect(database);
-
-		const data = await this.db.getAll(database);
-
-		return data;
 	};
 }
