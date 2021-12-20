@@ -1,14 +1,17 @@
 import express from "express";
 
+import bodyParser from 'body-parser';
+
 import ShopFacade from "./ShopFacade";
 
 const PORT = 3000;
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json())
 
 app.use(ShopFacade.initApp());
+
 
 app.listen(PORT, () => {
 	try {
@@ -17,3 +20,4 @@ app.listen(PORT, () => {
 		console.log(e);
 	}
 });
+

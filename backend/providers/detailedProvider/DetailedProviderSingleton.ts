@@ -87,4 +87,39 @@ export default class DetailedProviderSingleton {
 			);
 		});
 	}
+
+	async addProduct(product: Product) {
+		return new Promise((resolve, reject) => {
+			for (let i = 0; i < 50000; i++) {
+				this.connection?.query(
+					new QueryBuilder().insertInto(["ProductName", "Brand", "Material", "Color"], Object.values(product) as any, "Product").ExecuteQuery(),
+
+					(error, results) => {
+						if (error) {
+							reject(error);
+						}
+						resolve(results);
+					},
+				);
+			}
+		});
+	}
+
+	async getProduct(page: number): Promise<Product> {
+		const limit = 5000
+		const offset = limit * (page - 1)
+		
+		return new Promise((resolve, reject) => {
+			this.connection?.query(
+				new QueryBuilder().select(["*"], "Product").limit(limit).offset(offset).ExecuteQuery(),
+
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				},
+			);
+		});
+	}
 }

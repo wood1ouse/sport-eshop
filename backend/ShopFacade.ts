@@ -18,6 +18,8 @@ class ShopFacade {
 
 		this.router.delete("/product", this.shopController.deleteProduct);
 
+		this.router.get("/product/:ProductId", this.shopController.getProduct)
+
 		return this.router
 	}
 }

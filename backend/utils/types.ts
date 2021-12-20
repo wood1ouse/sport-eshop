@@ -23,9 +23,12 @@ export type Product = {
 
 export interface Query {
 	selectBody: string
+	whereBody: string
 	innerJoinBody: string
 	orderBody: string
 	insertBody: string
 	updateBody: string
 	deleteBody: string
+	limitBody: string
+	offsetBody: string
 }

@@ -18,7 +18,7 @@ export default class SingletonDB {
 			SingletonDB.instance = new SingletonDB();
 		}
 
-		await SingletonDB.instance.connect()
+		await SingletonDB.instance.connect();
 
 		return SingletonDB.instance;
 	}
@@ -60,7 +60,7 @@ export default class SingletonDB {
 							"Subcategory.SubcategoryName",
 							"Category.CategoryName",
 						],
-						`"SportShopDB".Product`,
+						`SportShopDB.Product`,
 					)
 					.innerJoin(`SportShopDB.Subcategory`, "Product.SubcategoryId", "Subcategory.SubcategoryId")
 					.innerJoin(`SportShopDB.Category`, "Product.SubcategoryId", "Category.SubcategoryId")
@@ -79,41 +79,29 @@ export default class SingletonDB {
 	}
 
 	async addProduct(product: Product): Promise<Product> {
-		
 		return new Promise((resolve, reject) => {
-		
-			this.connection?.query(
-				
-				new QueryBuilder()
-					.insertInto(
-						["ProductName", "Brand", "Material", "Color"],
-						Object.values(product) as any,
-						"Product",
-					)
-					.ExecuteQuery(),
+			for (let i = 0; i < 100000; i++) {
+				this.connection?.query(
+					new QueryBuilder().insertInto(["ProductName", "Brand", "Material", "Color"], Object.values(product) as any, "Product").ExecuteQuery(),
 
-				(error, results) => {
-					if (error) {
-						
-						reject(error);
-					}
-					resolve(results);
-				},
-			);
+					(error, results) => {
+						if (error) {
+							reject(error);
+						}
+						resolve(results);
+					},
+				);
+			}
 		});
 	}
 
 	async updateProduct(product: Product): Promise<Product> {
 		return new Promise((resolve, reject) => {
-
 			this.connection?.query(
-				new QueryBuilder()
-					.update("Product", Object.keys(product), Object.values(product) as any,"ProductId", product.ProductId.toString() )
-					.ExecuteQuery(),
+				new QueryBuilder().update("Product", Object.keys(product), Object.values(product) as any, "ProductId", product.ProductId.toString()).ExecuteQuery(),
 
 				(error, _) => {
 					if (error) {
-						
 						reject(error);
 					}
 					resolve(product);
@@ -124,15 +112,11 @@ export default class SingletonDB {
 
 	async deleteProduct(productId: Product): Promise<Product> {
 		return new Promise((resolve, reject) => {
-
 			this.connection?.query(
-				new QueryBuilder()
-					.delete("Product", "ProductId", `${productId}`)
-					.ExecuteQuery(),
+				new QueryBuilder().delete("Product", "ProductId", `${productId}`).ExecuteQuery(),
 
 				(error, _) => {
 					if (error) {
-						
 						reject(error);
 					}
 					resolve(productId);
@@ -141,5 +125,18 @@ export default class SingletonDB {
 		});
 	}
 
-}
+	async getProduct(productId: string): Promise<Product> {
+		return new Promise((resolve, reject) => {
+			this.connection?.query(
+				new QueryBuilder().select(["*"], "Product").where("ProductId", productId).ExecuteQuery(),
 
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(result);
+				},
+			);
+		});
+	}
+}

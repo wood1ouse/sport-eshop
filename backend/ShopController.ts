@@ -68,4 +68,18 @@ export default class ShopController {
 			res.status(500).json(error);
 		}
 	};
+
+	getProduct = async (req: Request, res: Response) => {
+		
+		try {
+			
+			const { ProductId } = req.params;
+
+			const results = await this.db.getProduct(ProductId);
+			res.status(200).json(results);
+
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	};
 }

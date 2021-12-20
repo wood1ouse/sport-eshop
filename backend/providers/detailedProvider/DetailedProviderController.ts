@@ -37,4 +37,27 @@ export default class DetailedProviderController {
 
 		res.status(200).json(data);
 	};
+
+	addProduct = async (req: Request, res: Response) => {
+		console.log(req.body);
+		
+		
+		const result = await this.db.addProduct(req.body);
+
+		res.status(200).json(result);
+	};
+
+	getProduct = async (req: Request, res: Response) => {
+		
+		try {
+			
+			const { page } = req.params;
+
+			const results = await this.db.getProduct(parseInt(page));
+			res.status(200).json(results);
+
+		} catch (error) {
+			res.status(500).json(error);
+		}
+	};
 }
