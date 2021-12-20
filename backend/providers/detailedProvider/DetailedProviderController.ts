@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { ProductSpecification } from "../utils/ProductSpecification";
-import { Product } from "../utils/types";
+import { ProductSpecification } from "../../utils/ProductSpecification";
+import { Product } from "../../utils/types";
 import DetailedProviderSingleton from "./DetailedProviderSingleton";
 
 export default class DetailedProviderController {

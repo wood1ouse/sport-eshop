@@ -13,5 +13,5 @@ detailedProviderServer.get("/details/:ProductId", detailedClientController.getDe
 detailedProviderServer.get("/getproducts", detailedClientController.getAll)
 
 detailedProviderServer.listen(PORT, () => {
-	console.log(`listening on ${PORT}, Detailed Provider Server`);
+	console.log(`Detailed Provider Server has started on port ${PORT}`);
 });

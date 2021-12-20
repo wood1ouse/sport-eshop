@@ -1,25 +1,25 @@
-import mysql from 'mysql';
-import DatabaseUtils from '../../../Utils';
-import { QueryBuilder } from '../utils/QueryBuilder';
-import { Product } from '../utils/types';
+import mysql from "mysql";
+import DatabaseUtils from "../../../Utils";
+import { QueryBuilder } from "../../utils/QueryBuilder";
+import { Product } from "../../utils/types";
 
 export default class FilteredProviderSingleton {
-    static instance: FilteredProviderSingleton;
-    static dbName: string = "FilteredProvider"
+	static instance: FilteredProviderSingleton;
+	static dbName: string = "FilteredProvider";
 	private user: string = DatabaseUtils.user;
 	private password: string = DatabaseUtils.password;
 
-    connection: mysql.Connection | undefined;
+	connection: mysql.Connection | undefined;
 
-    private constructor() {}
+	private constructor() {}
 
-    public static async getInstance(): Promise<FilteredProviderSingleton> {
+	public static async getInstance(): Promise<FilteredProviderSingleton> {
 		if (!FilteredProviderSingleton.instance) {
 			FilteredProviderSingleton.instance = new FilteredProviderSingleton();
 		}
 
-        await FilteredProviderSingleton.instance.connect()
-        
+		await FilteredProviderSingleton.instance.connect();
+
 		return FilteredProviderSingleton.instance;
 	}
 
@@ -42,8 +42,7 @@ export default class FilteredProviderSingleton {
 		});
 	}
 
-    async getAllCombined(): Promise<Array<Product>> {
-
+	async getAllCombined(): Promise<Array<Product>> {
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
 				new QueryBuilder()
@@ -63,16 +62,8 @@ export default class FilteredProviderSingleton {
 						],
 						`${FilteredProviderSingleton.dbName}.Product`,
 					)
-					.innerJoin(
-						`${FilteredProviderSingleton.dbName}.Subcategory`,
-						"Product.SubcategoryId",
-						"Subcategory.SubcategoryId",
-					)
-					.innerJoin(
-						`${FilteredProviderSingleton.dbName}.Category`,
-						"Product.SubcategoryId",
-						"Category.SubcategoryId",
-					)
+					.innerJoin(`${FilteredProviderSingleton.dbName}.Subcategory`, "Product.SubcategoryId", "Subcategory.SubcategoryId")
+					.innerJoin(`${FilteredProviderSingleton.dbName}.Category`, "Product.SubcategoryId", "Category.SubcategoryId")
 					.orderBy("ProductId")
 
 					.ExecuteQuery(),
@@ -86,6 +77,4 @@ export default class FilteredProviderSingleton {
 			);
 		});
 	}
-
-    
 }

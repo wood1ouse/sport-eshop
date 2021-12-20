@@ -22,7 +22,10 @@ export type Product = {
 };
 
 export interface Query {
-	selectBody: string,
+	selectBody: string
 	innerJoinBody: string
 	orderBody: string
+	insertBody: string
+	updateBody: string
+	deleteBody: string
 }

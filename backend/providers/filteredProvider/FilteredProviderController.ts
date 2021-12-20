@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
-import { ProductSpecification } from '../utils/ProductSpecification';
-import { Product } from '../utils/types';
+import { ProductSpecification } from '../../utils/ProductSpecification';
+import { Product } from '../../utils/types';
 import FilteredProviderSingleton from './FilteredProviderSingleton';
 
 export default class FilteredProviderController {
@@ -21,8 +21,8 @@ export default class FilteredProviderController {
 		res.status(200).json(filteredByParams.getSatisfiedBy());
 	};
 
-    getAll = async (req: Request, res: Response) => {
-        const data: Array<Product> = await this.db.getAllCombined();
+    getAll = async (_: Request, res: Response) => {
+        const data: Array<Product > = await this.db.getAllCombined();
 
 		res.status(200).json(data);
     }

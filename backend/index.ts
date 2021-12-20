@@ -12,7 +12,7 @@ app.use(ShopFacade.initApp());
 
 app.listen(PORT, () => {
 	try {
-		console.log(`Server has started on port ${PORT}`);
+		console.log(`Main server has started on port ${PORT}`);
 	} catch (e) {
 		console.log(e);
 	}
