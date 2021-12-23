@@ -28,8 +28,20 @@ export default class ShopController {
 			res.status(200).json(combinedData);
 		} else {
 			const filteredData = new ProductSpecification(combinedData, req.query);
-
+			
 			res.status(200).json(filteredData.getSatisfiedBy());
+		}
+	};
+
+	addMany = async (req: Request, res: Response) => {
+		try {
+			const product: Product = req.body;
+
+			const results = await this.db.addMany(product);
+
+			res.status(200).json(results);
+		} catch (error) {
+			res.status(500).json(error);
 		}
 	};
 

@@ -44,37 +44,16 @@ export default class FilteredProviderSingleton {
 		});
 	}
 
-	async getAllCombined(): Promise<Array<Product>> {
+	async getAll(): Promise<Array<Product>> {
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
-				new QueryBuilder()
-					.select(
-						[
-							"Product.ProductId",
-							"Product.ProductName",
-							"Product.Brand",
-							"Product.Price",
-							"Product.Material",
-							"Product.Color",
-							"Product.Size",
-							"Product.Discount",
-							"Product.Amount",
-							"Subcategory.SubcategoryName",
-							"Category.CategoryName",
-						],
-						`${FilteredProviderSingleton.dbName}.Product`,
-					)
-					.innerJoin(`${FilteredProviderSingleton.dbName}.Subcategory`, "Product.SubcategoryId", "Subcategory.SubcategoryId")
-					.innerJoin(`${FilteredProviderSingleton.dbName}.Category`, "Product.SubcategoryId", "Category.SubcategoryId")
-					.orderBy("ProductId")
+				new QueryBuilder().select(["*"], "Product").ExecuteQuery(),
 
-					.ExecuteQuery(),
-
-				(error, results) => {
+				(error, result) => {
 					if (error) {
 						reject(error);
 					}
-					resolve(results);
+					resolve(result);
 				},
 			);
 		});

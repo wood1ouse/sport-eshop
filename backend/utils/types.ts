@@ -3,7 +3,6 @@ export type Filter = {
 	CategoryName?: string;
 	SubcategoryName?: string;
 	Brand?: string;
-	
 };
 
 export type Product = {
@@ -19,16 +18,17 @@ export type Product = {
 	Size: number | null;
 	Discount: number;
 	Amount: number;
+	ProviderName: string;
 };
 
 export interface Query {
-	selectBody: string
-	whereBody: string
-	innerJoinBody: string
-	orderBody: string
-	insertBody: string
-	updateBody: string
-	deleteBody: string
-	limitBody: string
-	offsetBody: string
+	selectBody: string;
+	whereBody: string;
+	innerJoinBody: string;
+	orderBody: string;
+	insertBody: string;
+	updateBody: string;
+	deleteBody: string;
+	limitBody: string;
+	offsetBody: string;
 }

@@ -45,40 +45,19 @@ export default class SingletonDB {
 	async getAllCombined(): Promise<Array<Product>> {
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
-				new QueryBuilder()
-					.select(
-						[
-							"Product.ProductId",
-							"Product.ProductName",
-							"Product.Brand",
-							"Product.Price",
-							"Product.Material",
-							"Product.Color",
-							"Product.Size",
-							"Product.Discount",
-							"Product.Amount",
-							"Subcategory.SubcategoryName",
-							"Category.CategoryName",
-						],
-						`SportShopDB.Product`,
-					)
-					.innerJoin(`SportShopDB.Subcategory`, "Product.SubcategoryId", "Subcategory.SubcategoryId")
-					.innerJoin(`SportShopDB.Category`, "Product.SubcategoryId", "Category.SubcategoryId")
-					.orderBy("ProductId")
+				new QueryBuilder().select(["*"], "Product").ExecuteQuery(),
 
-					.ExecuteQuery(),
-
-				(error, results) => {
+				(error, result) => {
 					if (error) {
 						reject(error);
 					}
-					resolve(results);
+					resolve(result);
 				},
 			);
 		});
 	}
 
-	async addProduct(product: Product): Promise<Product> {
+	async addMany(product: Product): Promise<Product> {
 		return new Promise((resolve, reject) => {
 			for (let i = 0; i < 100000; i++) {
 				this.connection?.query(
@@ -92,6 +71,21 @@ export default class SingletonDB {
 					},
 				);
 			}
+		});
+	}
+
+	async addProduct(product: Product): Promise<Product> {
+		return new Promise((resolve, reject) => {
+			this.connection?.query(
+				new QueryBuilder().insertInto(["ProductName", "Brand", "Material", "Color"], Object.values(product) as any, "Product").ExecuteQuery(),
+
+				(error, results) => {
+					if (error) {
+						reject(error);
+					}
+					resolve(results);
+				},
+			);
 		});
 	}
 

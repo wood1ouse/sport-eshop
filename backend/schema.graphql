@@ -1,0 +1,38 @@
+type Product {
+    ProductId: Int
+	ProductName: String
+	SubcategoryId: Int
+	SubcategoryName: String
+	CategoryName: String
+	Brand: String
+	Price: Float
+	Material: String
+	Color: String
+	Size: Int
+	Discount: Float
+	Amount: Int
+	ProviderName: String
+}
+
+input Filter {
+	ProductName: String
+	ProductId: Int
+	CategoryName: String
+	SubcategoryName: String
+	Brand: String
+}
+
+input ProductInput {
+	ProductName: String!
+	Brand: String!
+	Material: String!
+	Color: String
+}
+
+type Query {
+    getProducts(filter: Filter): [Product]
+}
+
+type Mutation {
+	addProduct(product: ProductInput): Boolean!
+}

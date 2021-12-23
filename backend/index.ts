@@ -1,14 +1,21 @@
 import express from "express";
-
-import bodyParser from 'body-parser';
+import { graphqlHTTP } from 'express-graphql';
 
 import ShopFacade from "./ShopFacade";
+
+import {schema, root} from "./graphql"
 
 const PORT = 3000;
 
 const app = express();
 
 app.use(express.json())
+
+app.use('/graphql', graphqlHTTP({
+	schema: schema,
+	rootValue: root,
+	graphiql: true
+}))
 
 app.use(ShopFacade.initApp());
 

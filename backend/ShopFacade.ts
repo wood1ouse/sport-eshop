@@ -12,7 +12,9 @@ class ShopFacade {
 	initApp(): Router {
 		this.router.get("/", this.shopController.combineData);
 
-		this.router.post("/product", this.shopController.addProduct);
+		this.router.post("/product/many", this.shopController.addMany);
+
+		this.router.post("/product/", this.shopController.addProduct);
 
 		this.router.put("/product", this.shopController.updateProduct);
 

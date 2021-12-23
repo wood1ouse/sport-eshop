@@ -4,7 +4,7 @@ import NodeCache from "node-cache";
 export default class CacheServie {
 	private cache!: NodeCache;
 	constructor() {
-		this.cache = new NodeCache({ checkperiod: 60 * 60 * 120});
+		this.cache = new NodeCache({ checkperiod: 60 * 60 * 24});
 	}
 
 	set(key: string, value: any) {

@@ -55,34 +55,13 @@ export default class DetailedProviderSingleton {
 	async getAllCombined(): Promise<Array<Product>> {
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
-				new QueryBuilder()
-					.select(
-						[
-							"Product.ProductId",
-							"Product.ProductName",
-							"Product.Brand",
-							"Product.Price",
-							"Product.Material",
-							"Product.Color",
-							"Product.Size",
-							"Product.Discount",
-							"Product.Amount",
-							"Subcategory.SubcategoryName",
-							"Category.CategoryName",
-						],
-						`${DetailedProviderSingleton.dbName}.Product`,
-					)
-					.innerJoin(`${DetailedProviderSingleton.dbName}.Subcategory`, "Product.SubcategoryId", "Subcategory.SubcategoryId")
-					.innerJoin(`${DetailedProviderSingleton.dbName}.Category`, "Product.SubcategoryId", "Category.SubcategoryId")
-					.orderBy("ProductId")
+				new QueryBuilder().select(["*"], "Product").ExecuteQuery(),
 
-					.ExecuteQuery(),
-
-				(error, results) => {
+				(error, result) => {
 					if (error) {
 						reject(error);
 					}
-					resolve(results);
+					resolve(result);
 				},
 			);
 		});

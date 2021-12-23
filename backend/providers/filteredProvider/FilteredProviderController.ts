@@ -16,7 +16,7 @@ export default class FilteredProviderController {
 	}
 
 	filterBy = async (req: Request, res: Response) => {
-		const data = await this.db.getAllCombined();
+		const data = await this.db.getAll();
 
 		const filteredByParams = new ProductSpecification(data, req.query);
 
@@ -24,7 +24,7 @@ export default class FilteredProviderController {
 	};
 
 	getAll = async (_: Request, res: Response) => {
-		const data: Array<Product> = await this.db.getAllCombined();
+		const data: Array<Product> = await this.db.getAll();
 
 		res.status(200).json(data);
 	};
