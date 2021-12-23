@@ -10,6 +10,8 @@ filteredProviderServer.get("/search", filteredClientController.filterBy);
 
 filteredProviderServer.get("/getproducts", filteredClientController.getAll);
 
+filteredProviderServer.get("/product/:ProductId", filteredClientController.getProduct);
+
 filteredProviderServer.listen(PORT, () => {
 	console.log(`Filtered Provider Server has started on port ${PORT}`);
 });

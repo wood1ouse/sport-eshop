@@ -105,7 +105,7 @@ export default class DetailedProviderSingleton {
 		});
 	}
 
-	async getProduct(page: number): Promise<Product> {
+	async getProduct(page: number): Promise<Product[]> {
 		const limit = 5000
 		const offset = limit * (page - 1)
 		

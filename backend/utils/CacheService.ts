@@ -1,12 +1,17 @@
+import { Product } from './types';
 import NodeCache from "node-cache";
 
-export default class Cache {
+export default class CacheServie {
 	private cache!: NodeCache;
-	constructor(ttlSeconds: number) {
-		this.cache = new NodeCache({ stdTTL: ttlSeconds, checkperiod: ttlSeconds * 0.2, useClones: false });
+	constructor() {
+		this.cache = new NodeCache({ checkperiod: 60 * 60 * 120});
 	}
 
-	async get(key: string, storeFunction: () => Promise<any>) {
+	set(key: string, value: any) {
+		this.cache.set(key, value)
+	}
+
+	async get(key: string, storeFunction: () => Promise<Product> | Promise<Product[]>) {
 		const value = this.cache.get(key);
 		if (value) {
 			return Promise.resolve(value);
