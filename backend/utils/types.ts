@@ -32,3 +32,7 @@ export interface Query {
 	limitBody: string;
 	offsetBody: string;
 }
+
+export interface ProductCartType {
+	ProductId: number
+}

@@ -22,17 +22,40 @@ input Filter {
 	Brand: String
 }
 
-input ProductInput {
+input ProductAddInput {
 	ProductName: String!
 	Brand: String!
-	Material: String!
+	Material: String
 	Color: String
 }
 
+input ProductSystemInput {
+	ProductId: Int!
+}
+
+input ProductUpdateInput {
+	ProductId: Int!
+	ProductName: String
+	SubcategoryId: Int
+	SubcategoryName: String
+	CategoryName: String
+	Brand: String
+	Price: Float
+	Material: String
+	Color: String
+	Size: Int
+	Discount: Float
+	Amount: Int
+	ProviderName: String
+}
+
 type Query {
-    getProducts(filter: Filter): [Product]
+    getProducts(product: Filter): [Product]
+	addProductToCart(product: ProductSystemInput): [Product]
 }
 
 type Mutation {
-	addProduct(product: ProductInput): Boolean!
+	addProduct(product: ProductAddInput): Boolean!
+	deleteProduct(product: ProductSystemInput): Boolean!
+	updateProduct(product: ProductUpdateInput): Boolean!
 }

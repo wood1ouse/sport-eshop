@@ -89,7 +89,7 @@ export default class SingletonDB {
 		});
 	}
 
-	async updateProduct(product: Product): Promise<Product> {
+	async updateProduct(product: any): Promise<Product> {
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
 				new QueryBuilder().update("Product", Object.keys(product), Object.values(product) as any, "ProductId", product.ProductId.toString()).ExecuteQuery(),
@@ -104,16 +104,16 @@ export default class SingletonDB {
 		});
 	}
 
-	async deleteProduct(productId: Product): Promise<Product> {
+	async deleteProduct({ProductId}: any): Promise<number> {
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
-				new QueryBuilder().delete("Product", "ProductId", `${productId}`).ExecuteQuery(),
+				new QueryBuilder().delete("Product", "ProductId", `${ProductId}`).ExecuteQuery(),
 
 				(error, _) => {
 					if (error) {
 						reject(error);
 					}
-					resolve(productId);
+					resolve(ProductId);
 				},
 			);
 		});

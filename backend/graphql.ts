@@ -1,9 +1,10 @@
 import { ProductSpecification } from "./utils/ProductSpecification";
-import { Filter, Product } from "./utils/types";
+import { Product, ProductCartType } from "./utils/types";
 import { readFileSync } from "fs";
 import { buildSchema } from "graphql";
 import SingletonDB from "./SingletonDB";
 import axios from "axios";
+import { createCart } from "./utils/CartService";
 
 const schemaString = readFileSync("backend/schema.graphql", { encoding: "utf-8" });
 
@@ -12,11 +13,12 @@ let db!: SingletonDB;
 SingletonDB.getInstance().then((database) => {
 	db = database;
 });
-
 export const schema = buildSchema(schemaString);
 
+const addToCart = createCart();
+
 export const root = {
-	getProducts: async (filter: any) => {
+	getProducts: async (product: any) => {
 		const dbData: Array<Product> = await db.getAllCombined();
 
 		const firstProvider = await axios.get("http://localhost:3001/getproducts");
@@ -25,8 +27,8 @@ export const root = {
 
 		const combinedData = [...dbData, ...firstProvider.data, ...secondProvider.data];
 
-		if (Object.keys(filter).length > 0) {
-			const filteredData = new ProductSpecification(combinedData, filter["filter"]);
+		if (Object.keys(product).length > 0) {
+			const filteredData = new ProductSpecification(combinedData, product["product"] || product);
 			return filteredData.getSatisfiedBy();
 		}
 
@@ -34,9 +36,23 @@ export const root = {
 	},
 
 	addProduct: async (product: any) => {
-        console.log(product);
-        
 		await db.addProduct(product["product"]);
-        return true
+		return true;
+	},
+
+	deleteProduct: async (product: any) => {
+		await db.deleteProduct(product["product"]);
+		return true;
+	},
+
+	updateProduct: async (product: any) => {
+		await db.updateProduct(product["product"]);
+		return true;
+	},
+
+	addProductToCart: async (product: any) => {
+		const [data] = await root.getProducts(product);
+
+		return addToCart(data);
 	},
 };
