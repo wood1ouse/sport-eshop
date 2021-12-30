@@ -18,7 +18,7 @@ export const schema = buildSchema(schemaString);
 const addToCart = createCart();
 
 export const root = {
-	getProducts: async (product: any) => {
+	getProducts: async (filter: any) => {
 		const dbData: Array<Product> = await db.getAllCombined();
 
 		const firstProvider = await axios.get("http://localhost:3001/getproducts");
@@ -27,8 +27,8 @@ export const root = {
 
 		const combinedData = [...dbData, ...firstProvider.data, ...secondProvider.data];
 
-		if (Object.keys(product).length > 0) {
-			const filteredData = new ProductSpecification(combinedData, product["product"] || product);
+		if (Object.keys(filter).length > 0) {
+			const filteredData = new ProductSpecification(combinedData, filter["product"]);
 			return filteredData.getSatisfiedBy();
 		}
 

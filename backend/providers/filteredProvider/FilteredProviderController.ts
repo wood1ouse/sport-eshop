@@ -6,12 +6,10 @@ import FilteredProviderSingleton from "./FilteredProviderSingleton";
 
 export default class FilteredProviderController {
 	private db!: FilteredProviderSingleton;
-	private cache!: CacheService;
 
 	constructor() {
 		FilteredProviderSingleton.getInstance().then((database) => {
 			this.db = database;
-			this.cache = new CacheService();
 		});
 	}
 
@@ -26,26 +24,24 @@ export default class FilteredProviderController {
 	getAll = async (_: Request, res: Response) => {
 		const data: Array<Product> = await this.db.getAll();
 
-		res.status(200).json(data);
+		setTimeout(() => {
+			res.status(200).json(data);
+		}, 5000)
 	};
 
 	getProduct = async (req: Request, res: Response) => {
 		const { ProductId } = req.params;
 
-		const data = await this.cache.get(ProductId, () => {
-			return this.db.getProduct(ProductId);
-		});
-
 		// slow variant
-		// const data = await this.db.getProduct(ProductId)
+		const data = await this.db.getProduct(ProductId)
 
-		const slowServerResponse = setTimeout(() => {
+		setTimeout(() => {
 			res.status(200).json(data);
-		}, 30000);
+		}, 5000);
 
-		if (data) {
-			clearTimeout(slowServerResponse);
-			res.status(200).json(data);
-		}
+		// if (data) {
+		// 	clearTimeout(slowServerResponse);
+		// 	res.status(200).json(data);
+		// }
 	};
 }

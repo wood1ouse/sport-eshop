@@ -6,7 +6,6 @@ import DetailedProviderSingleton from "./DetailedProviderSingleton";
 
 export default class DetailedProviderController {
 	private db!: DetailedProviderSingleton;
-	private cache: CacheServie = new CacheServie();
 
 	constructor() {
 		DetailedProviderSingleton.getInstance().then((database) => {
@@ -35,21 +34,17 @@ export default class DetailedProviderController {
 	};
 
 	addProduct = async (req: Request, res: Response) => {
-		console.log(req.body);
 
 		const result = await this.db.addProduct(req.body);
 
 		res.status(200).json(result);
 	};
 
-	getProduct = async (req: Request, res: Response) => {
+	getPage = async (req: Request, res: Response) => {
 		try {
 			const { page } = req.params;
-			const cacheKey = `page_${page}`;
 
-			const results = await this.cache.get(cacheKey, () => {
-				return this.db.getProduct(parseInt(page));
-			});
+			const results = await this.db.getPage(parseInt(page));
 
 
 			res.status(200).json(results);
@@ -57,4 +52,15 @@ export default class DetailedProviderController {
 			res.status(500).json(error);
 		}
 	};
+	
+	getRowsCount = async (_: Request, res: Response) => {
+		try {
+			res.status(200).json((await this.db.getRowsCount()))
+
+		} catch (error) {
+			res.status(500).json(error)
+		}
+	}
+
+
 }

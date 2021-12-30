@@ -119,7 +119,7 @@ export default class SingletonDB {
 		});
 	}
 
-	async getProduct(productId: string): Promise<Product> {
+	async getProduct(productId: string): Promise<any> {
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
 				new QueryBuilder().select(["*"], "Product").where("ProductId", productId).ExecuteQuery(),

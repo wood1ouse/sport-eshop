@@ -84,10 +84,26 @@ export default class DetailedProviderSingleton {
 		});
 	}
 
-	async getProduct(page: number): Promise<Product[]> {
-		const limit = 5000
-		const offset = limit * (page - 1)
-		
+	async getRowsCount(): Promise<any> {
+		return new Promise((resolve, reject) => {
+			this.connection?.query(
+				new QueryBuilder().select(["COUNT(*)"], "Product").ExecuteQuery(),
+
+				(error, result) => {
+					if (error) {
+						reject(error);
+					}
+
+					resolve(result);
+				},
+			);
+		});
+	}
+
+	async getPage(page: number): Promise<any> {
+		const limit = 5000;
+		const offset = limit * (page - 1);
+
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
 				new QueryBuilder().select(["*"], "Product").limit(limit).offset(offset).ExecuteQuery(),
@@ -96,6 +112,7 @@ export default class DetailedProviderSingleton {
 					if (error) {
 						reject(error);
 					}
+
 					resolve(result);
 				},
 			);

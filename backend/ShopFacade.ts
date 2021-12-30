@@ -1,4 +1,5 @@
 import { Router } from "express";
+import cache from './utils/CacheService';
 import ShopController from "./ShopController";
 
 class ShopFacade {
@@ -20,6 +21,10 @@ class ShopFacade {
 
 		this.router.delete("/product", this.shopController.deleteProduct);
 
+		this.router.get("/providerpage/:page", cache.verifyCache, this.shopController.getProviderPage)
+
+		this.router.get("/providerproduct/:ProductId", cache.verifyCache, this.shopController.getProviderProduct)
+		
 		this.router.get("/product/:ProductId", this.shopController.getProduct)
 
 		return this.router

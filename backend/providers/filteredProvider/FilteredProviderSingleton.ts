@@ -9,7 +9,6 @@ export default class FilteredProviderSingleton {
 	static dbName: string = "FilteredProvider";
 	private user: string = DatabaseUtils.user;
 	private password: string = DatabaseUtils.password;
-	private cache: CacheServie = new CacheServie()
 
 	connection: mysql.Connection | undefined;
 
@@ -60,8 +59,7 @@ export default class FilteredProviderSingleton {
 	}
 
 	async getProduct(productId: string): Promise<Product> {
-		const cacheKey = `product_${productId}`
-
+      
 		return new Promise((resolve, reject) => {
 			this.connection?.query(
 				new QueryBuilder().select(["*"], "Product").where("ProductId", productId).ExecuteQuery(),
@@ -70,7 +68,6 @@ export default class FilteredProviderSingleton {
 					if (error) {
 						reject(error);
 					}
-					this.cache.set(cacheKey, result)
 					resolve(result);
 				},
 			);

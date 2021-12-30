@@ -50,7 +50,7 @@ input ProductUpdateInput {
 }
 
 type Query {
-    getProducts(product: Filter): [Product]
+    getProducts(filter: Filter): [Product]
 	addProductToCart(product: ProductSystemInput): [Product]
 }
 
